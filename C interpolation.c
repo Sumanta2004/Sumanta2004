@@ -1,14 +1,12 @@
-// C# Program to interpolate using
-// newton backward interpolation
+// C# Program to interpolate using 
+// newton forward interpolation
 
 using System;
  
 
 class GFG
 {
-
-     
-// Calculation of u mentioned in formula
+// calculating u mentioned in the formula
 
 static double u_cal(double u, int n)
 {
@@ -17,12 +15,12 @@ static double u_cal(double u, int n)
 
     for (int i = 1; i < n; i++)
 
-        temp = temp * (u + i);
+        temp = temp * (u - i);
 
     return temp;
 }
  
-// Calculating factorial of given n
+// calculating factorial of given number n
 
 static int fact(int n)
 {
@@ -38,88 +36,81 @@ static int fact(int n)
  
 // Driver code
 
-static void Main()
+public static void Main()
 {
 
-    // number of values given
+    // Number of values given
 
-    int n = 5;
+    int n = 4;
 
-    double[] x = { 1891, 1901, 1911, 
+    double[] x = { 45, 50, 55, 60 };
 
-                1921, 1931 };
+     
 
-                 
+    // y[,] is used for difference table
 
-    // y[][] is used for difference 
+    // with y[,0] used for input
 
-    // table and y[][0] used for input
+    double[,] y=new double[n,n];
 
-    double[,] y = new double[n,n];
+    y[0,0] = 0.7071;
 
-    y[0,0] = 46;
+    y[1,0] = 0.7660;
 
-    y[1,0] = 66;
+    y[2,0] = 0.8192;
 
-    y[2,0] = 81;
-
-    y[3,0] = 93;
-
-    y[4,0] = 101;
+    y[3,0] = 0.8660;
  
 
-    // Calculating the backward difference table
+    // Calculating the forward difference
 
-    for (int i = 1; i < n; i++) 
+    // table
 
-    {
+    for (int i = 1; i < n; i++) {
 
-        for (int j = n - 1; j >= i; j--)
+        for (int j = 0; j < n - i; j++)
 
-            y[j,i] = y[j,i - 1] - y[j - 1,i - 1];
+            y[j,i] = y[j + 1,i - 1] - y[j,i - 1];
 
     }
  
 
-    // Displaying the backward difference table
+    // Displaying the forward difference table
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
 
-    {
+        Console.Write(x[i]+"\t");
 
-        for (int j = 0; j <= i; j++)
+        for (int j = 0; j < n - i; j++)
 
             Console.Write(y[i,j]+"\t");
 
-        Console.WriteLine("");;
+        Console.WriteLine();
 
     }
  
 
     // Value to interpolate at
 
-    double value = 1925;
+    double value = 52;
  
 
-    // Initializing u and sum
+    // initializing u and sum
 
-    double sum = y[n - 1,0];
+    double sum = y[0,0];
 
-    double u = (value - x[n - 1]) / (x[1] - x[0]);
+    double u = (value - x[0]) / (x[1] - x[0]);
 
-    for (int i = 1; i < n; i++) 
+    for (int i = 1; i < n; i++) {
 
-    {
+        sum = sum + (u_cal(u, i) * y[0,i]) /
 
-        sum = sum + (u_cal(u, i) * y[n - 1,i]) /
-
-                                    fact(i);
+                                fact(i);
 
     }
  
 
-    Console.WriteLine("\n Value at "+value+" is "+Math.Round(sum,4));
+    Console.WriteLine("\n Value at "+value+" is "+Math.Round(sum,6));
 }
 }
- 
 // This code is contributed by mits
